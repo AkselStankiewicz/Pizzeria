@@ -10,25 +10,29 @@ using System.Windows.Forms;
 
 namespace Pizzeria
 {
-    public partial class Pizzeria : Form 
+    public partial class Pizzeria : Form
     {
         public Pizzeria()
         {
             InitializeComponent();
             Console.WriteLine("Pobieram.");
-            pizzaDB.PobierzMenu().ForEach(o => {
+            pizzaDB.PobierzMenu().ForEach(o =>
+            {
                 string[] pos = { o.name, o.ingrediences, (o.price / 100).ToString() };
                 this.listViewTab1.Items.Add(new ListViewItem(pos));
             });
-            mainDishDBHelper.PobierzMenu().ForEach(o => {
+            mainDishDBHelper.PobierzMenu().ForEach(o =>
+            {
                 string[] pos = { o.name, (o.price / 100).ToString() };
                 this.listViewTab2.Items.Add(new ListViewItem(pos));
             });
-            soupDBHelper.PobierzMenu().ForEach(o => {
+            soupDBHelper.PobierzMenu().ForEach(o =>
+            {
                 string[] pos = { o.name, (o.price / 100).ToString() };
                 this.listViewTab3.Items.Add(new ListViewItem(pos));
             });
-            drinkDBHelper.PobierzMenu().ForEach(o => {
+            drinkDBHelper.PobierzMenu().ForEach(o =>
+            {
                 string[] pos = { o.name, (o.price / 100).ToString() };
                 this.listViewTab4.Items.Add(new ListViewItem(pos));
             });
@@ -39,6 +43,7 @@ namespace Pizzeria
         SoupDBHelper soupDBHelper = new SoupDBHelper();
         DrinkDBHelper drinkDBHelper = new DrinkDBHelper();
         PriceHelper priceHelper = new PriceHelper();
+        string server = "SERVER=localhost;PORT=3306;DATABASE=pizzeria;UID=pizzeria;PASSWORD=pizza";
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -117,20 +122,22 @@ namespace Pizzeria
 
         private void button14_Click(object sender, EventArgs e)
         {
-            int curr = int.Parse(this.textBox8.Text.ToString());
-            this.textBox8.Text = (int.Parse(this.textBox8.Text) + 1).ToString();
-            this.label16.Text = (int.Parse(this.label16.Text.ToString())/curr*int.Parse(this.textBox8.Text.ToString())).ToString();
+            priceHelper.UpdatePricePlus(this.textBox8, this.label16);
+            //int curr = int.Parse(this.textBox8.Text.ToString());
+            //this.textBox8.Text = (int.Parse(this.textBox8.Text) + 1).ToString();
+            //this.label16.Text = (int.Parse(this.label16.Text.ToString())/curr*int.Parse(this.textBox8.Text.ToString())).ToString();
         }
 
         private void button15_Click(object sender, EventArgs e)
         {
-            int curr = int.Parse(this.textBox8.Text.ToString());
-            this.textBox8.Text = (int.Parse(this.textBox8.Text) - 1).ToString();
-            if (int.Parse(this.textBox8.Text) <= 1)
-            {
-                this.textBox8.Text = "1";
-            }
-            this.label16.Text = (int.Parse(this.label16.Text.ToString()) / curr * int.Parse(this.textBox8.Text.ToString())).ToString();
+            priceHelper.UpdatePriceMinus(this.textBox8, this.label16);
+            //int curr = int.Parse(this.textBox8.Text.ToString());
+            //this.textBox8.Text = (int.Parse(this.textBox8.Text) - 1).ToString();
+            //if (int.Parse(this.textBox8.Text) <= 1)
+            //{
+            //    this.textBox8.Text = "1";
+            //}
+            //this.label16.Text = (int.Parse(this.label16.Text.ToString()) / curr * int.Parse(this.textBox8.Text.ToString())).ToString();
 
         }
 
@@ -154,31 +161,27 @@ namespace Pizzeria
 
         private void button19_Click(object sender, EventArgs e)
         {
-            this.textBox10.Text = (int.Parse(this.textBox10.Text) + 1).ToString();
+            priceHelper.UpdatePricePlus(this.textBox10, this.label22);
         }
 
         private void button18_Click(object sender, EventArgs e)
         {
-            this.textBox10.Text = (int.Parse(this.textBox10.Text) - 1).ToString();
-            if (int.Parse(this.textBox10.Text) <= 1)
-                this.textBox10.Text = "1";
+            priceHelper.UpdatePriceMinus(this.textBox10, this.label22);
         }
 
         private void button25_Click(object sender, EventArgs e)
         {
-            this.textBox11.Text = (int.Parse(this.textBox11.Text) + 1).ToString();
+            priceHelper.UpdatePricePlus(this.textBox11, this.label25);
         }
 
         private void button21_Click(object sender, EventArgs e)
         {
-            this.textBox11.Text = (int.Parse(this.textBox11.Text) - 1).ToString();
-            if (int.Parse(this.textBox11.Text) <= 1)
-                this.textBox11.Text = "1";
+            priceHelper.UpdatePriceMinus(this.textBox11, this.label25);
         }
 
         private void button22_Click(object sender, EventArgs e)
         {
-            if(this.listViewTab1.SelectedItems.Count == 0)
+            if (this.listViewTab1.SelectedItems.Count == 0)
             {
                 MessageBox.Show("Wybierz produkt z listy.", "Błąd");
                 return;
@@ -189,17 +192,21 @@ namespace Pizzeria
             string quantity = this.textBox8.Text;
             string cheese;
             string adds = "";
-            if(int.Parse(this.textBox2.Text.ToString()) == 0)
+            string price = this.label16.Text;
+            int overallPrice = int.Parse(this.label29.Text);
+            overallPrice += int.Parse(price);
+            this.label29.Text = overallPrice.ToString();
+            if (int.Parse(this.textBox2.Text.ToString()) == 0)
             {
                 cheese = "";
-            } 
+            }
             else
             {
                 cheese = "Ser: x" + this.textBox2.Text.ToString();
                 adds += cheese + "\n";
             }
             string salami;
-            if(int.Parse(this.textBox3.Text.ToString()) == 0)
+            if (int.Parse(this.textBox3.Text.ToString()) == 0)
             {
                 salami = "";
             }
@@ -209,7 +216,7 @@ namespace Pizzeria
                 adds += salami + "\n";
             }
             string ham;
-            if(int.Parse(this.textBox4.Text.ToString()) == 0)
+            if (int.Parse(this.textBox4.Text.ToString()) == 0)
             {
                 ham = "";
             }
@@ -219,7 +226,7 @@ namespace Pizzeria
                 adds += ham + "\n";
             }
             string mushrooms;
-            if(int.Parse(this.textBox4.Text.ToString()) == 0)
+            if (int.Parse(this.textBox4.Text.ToString()) == 0)
             {
                 mushrooms = "";
             }
@@ -230,7 +237,7 @@ namespace Pizzeria
             }
             Console.WriteLine("\n" + "Name: " + name + "\nQuantity: " + quantity + "\n" + adds);
 
-            string[] dataitem = { quantity, name, adds};
+            string[] dataitem = { quantity, name, adds, price };
             this.dataGridView1.Rows.Add(dataitem);
         }
 
@@ -295,7 +302,7 @@ namespace Pizzeria
             string name = item.ToString().Remove(0, 15);
             Console.WriteLine(name);
             name = name.Remove(name.Length - 1);
-            string quantity = this.textBox8.Text;
+            string quantity = this.textBox9.Text;
             string bar;
             string adds = "";
             if (int.Parse(this.textBox6.Text.ToString()) == 0)
@@ -320,6 +327,40 @@ namespace Pizzeria
             Console.WriteLine("\n" + "Name: " + name + "\nQuantity: " + quantity + "\n" + adds);
 
             string[] dataitem = { quantity, name, adds };
+            this.dataGridView1.Rows.Add(dataitem);
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            if (this.listViewTab4.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Wybierz produkt z listy.", "Błąd");
+                return;
+            }
+            ListViewItem item = this.listViewTab4.SelectedItems[0];
+            string name = item.ToString().Remove(0, 15);
+            Console.WriteLine(name);
+            name = name.Remove(name.Length - 1);
+            string quantity = this.textBox11.Text;
+
+            string[] dataitem = { quantity, name };
+            this.dataGridView1.Rows.Add(dataitem);
+        }
+
+        private void button24_Click(object sender, EventArgs e)
+        {
+            if (this.listViewTab3.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Wybierz produkt z listy.", "Błąd");
+                return;
+            }
+            ListViewItem item = this.listViewTab3.SelectedItems[0];
+            string name = item.ToString().Remove(0, 15);
+            Console.WriteLine(name);
+            name = name.Remove(name.Length - 1);
+            string quantity = this.textBox10.Text;
+
+            string[] dataitem = { quantity, name };
             this.dataGridView1.Rows.Add(dataitem);
         }
     }
